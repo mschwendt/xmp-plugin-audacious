@@ -251,9 +251,15 @@ Tuple *probe_for_tuple(const gchar *_filename, VFSFile *fd)
 
 	tuple = tuple_new_from_filename(filename);
 	g_free(filename);
+#if _AUD_PLUGIN_VERSION >= 45
+	tuple_set_str(tuple, FIELD_TITLE, mi.mod->name);
+	tuple_set_str(tuple, FIELD_CODEC, mi.mod->type);
+	tuple_set_int(tuple, FIELD_LENGTH, fi.total_time);
+#else
 	tuple_set_str(tuple, FIELD_TITLE, NULL, mi.mod->name);
 	tuple_set_str(tuple, FIELD_CODEC, NULL, mi.mod->type);
 	tuple_set_int(tuple, FIELD_LENGTH, NULL, fi.total_time);
+#endif
 
 	xmp_release_module(ctx);
 	xmp_free_context(ctx);
@@ -364,9 +370,15 @@ static gboolean play(const gchar *_filename, VFSFile *file)
 
 	tuple = tuple_new_from_filename(filename);
 	g_free(filename);
+#if _AUD_PLUGIN_VERSION >= 45
+	tuple_set_str(tuple, FIELD_TITLE, plugin_cfg.mod_info.mod->name);
+	tuple_set_str(tuple, FIELD_CODEC, plugin_cfg.mod_info.mod->type);
+	tuple_set_int(tuple, FIELD_LENGTH, fi.total_time);
+#else
 	tuple_set_str(tuple, FIELD_TITLE, NULL, plugin_cfg.mod_info.mod->name);
 	tuple_set_str(tuple, FIELD_CODEC, NULL, plugin_cfg.mod_info.mod->type);
 	tuple_set_int(tuple, FIELD_LENGTH, NULL, fi.total_time);
+#endif
 #if _AUD_PLUGIN_VERSION < 45
 	ipb->set_tuple(ipb, tuple);
 
