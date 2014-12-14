@@ -49,6 +49,7 @@ typedef struct {
 } XMPConfig;
 
 XMPConfig plugin_cfg;
+static bool have_xmp_ctx = false;
 static void configure_load();
 
 class AudXMP : public InputPlugin {
@@ -180,6 +181,7 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
     _D("play_file: %s", filename);
 
     ctx_play = xmp_create_context();
+    have_xmp_ctx = true;
 
     if ((f = fopen(filename, "rb")) == 0) {
         goto PLAY_ERROR_1;
@@ -202,8 +204,12 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
         break;
     }
 
-    if (plugin_cfg.convert8bit == 0)
+    if (plugin_cfg.convert8bit == 0) {
         resol = 16;
+    } else {
+        flags |= XMP_FORMAT_8BIT;
+        flags |= XMP_FORMAT_UNSIGNED;
+    }
 
     if (plugin_cfg.force_mono == 0) {
         channelcnt = 2;
@@ -263,10 +269,12 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
 
     xmp_end_player(ctx_play);
     xmp_release_module(ctx_play);
+    have_xmp_ctx = false;
     xmp_free_context(ctx_play);
     return true;
 
  PLAY_ERROR_1:
+    have_xmp_ctx = false;
     xmp_free_context(ctx_play);
     free(filename);
     return false;
@@ -334,8 +342,10 @@ static void configure_apply()
 {
     configure_load();
 
-    // enough to make this active on-the-fly?
-	xmp_set_player(ctx_play, XMP_PLAYER_MIX, plugin_cfg.pan_amplitude);
+    if (have_xmp_ctx) {
+        // enough to make this active on-the-fly?
+        xmp_set_player(ctx_play, XMP_PLAYER_MIX, plugin_cfg.pan_amplitude);
+    }
 }
 
 static const PreferencesWidget precision_widgets[] = {
