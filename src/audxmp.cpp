@@ -1,13 +1,14 @@
 /*
- * XMP plugin for XMMS/Beep/Audacious
- * Written by Claudio Matsuoka, 2000-04-30
- * Based on J. Nick Koston's MikMod plugin for XMMS
- */
-
-/* Audacious 3.0 port/rewrite for Fedora by Michael Schwendt
- * Adapted to Audacious 3.6 C++ API on 2014-12-13
+ * Audacious input plug-in using libxmp (Extended Module Player / XMP)
  *
+ * Adapted to Audacious 3.6 C++ API on 2014-12-13
+ * Audacious 3.0 port/rewrite for Fedora by Michael Schwendt
  * Ported for libxmp 4.0 by Claudio Matsuoka, 2013-04-13
+ *
+ * Originally based on:
+ *   XMP plugin for XMMS/Beep/Audacious
+ *   Written by Claudio Matsuoka, 2000-04-30
+ *   Based on J. Nick Koston's MikMod plugin for XMMS
  */
 
 #include <libaudcore/plugin.h>
@@ -35,7 +36,6 @@ xmp_context ctx_play;
 
 typedef struct {
 	int mixing_freq;
-	bool force8bit;  // ???
 	bool force_mono;
 	bool interpolation;
 	bool filter;
@@ -111,7 +111,6 @@ const char *const AudXMP::defaults[] = {
     "convert8bit", "0",
     "fixloops", "0",
     "modrange", "0",
-    "force8bit", "0",
     "force_mono", "0",
     "interpolation", "1",
     "filter", "1",
@@ -328,7 +327,6 @@ static void configure_load() {
 #define CFGREADINT(x) plugin_cfg.x = aud_get_int ("XMP", #x)
 
     CFGREADINT(mixing_freq);
-    CFGREADINT(force8bit);
     CFGREADINT(convert8bit);
     CFGREADINT(modrange);
     CFGREADINT(fixloops);
@@ -374,7 +372,6 @@ static const PreferencesWidget quality_widget_columns[] = {
 };
 
 static const PreferencesWidget options_widget_columns[] = {
-    //WidgetCheck("Convert 16 bit samples to 8 bit", WidgetBool(plugin_cfg.force8bit,&configure_apply)),
     WidgetCheck("Fix sample loops", WidgetBool(plugin_cfg.fixloops,&configure_apply)),
     WidgetCheck("Force 3 octave range in standard MOD files", WidgetBool(plugin_cfg.modrange,&configure_apply)),
     WidgetCheck("Enable 32-bit linear interpolation", WidgetBool(plugin_cfg.interpolation,&configure_apply)),
