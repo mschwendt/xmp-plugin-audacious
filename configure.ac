@@ -1,4 +1,4 @@
-AC_INIT([xmp-plugin-audacious], [4.0.0.3.6])
+AC_INIT([xmp-plugin-audacious], [4.0.0.3.8])
 AC_CONFIG_SRCDIR([src/audxmp.cpp])
 AM_INIT_AUTOMAKE([foreign])
 AM_DISABLE_STATIC
@@ -32,8 +32,8 @@ XMP_VERSION="$xmp_version"
 AC_SUBST([XMP_VERSION])
 
 
-PKG_CHECK_MODULES([AUDACIOUS], [audacious >= 3.6], [],
-    AC_MSG_ERROR([Could not find Audacious >= 3.6 API pkgconfig file.]))
+PKG_CHECK_MODULES([AUDACIOUS], [audacious >= 3.8], [],
+    AC_MSG_ERROR([Could not find Audacious >= 3.8 API pkgconfig file.]))
 
 AC_MSG_CHECKING([for Audacious plug-in directory])
 audfc_plugin_dir=`$PKG_CONFIG --variable=plugin_dir audacious`

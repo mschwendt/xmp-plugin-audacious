@@ -1,6 +1,7 @@
 /*
  * Audacious input plug-in using libxmp (Extended Module Player / XMP)
  *
+ * Adapted to Audacious 3.8 API on 2016-09-18
  * Adapted to Audacious 3.6 C++ API on 2014-12-13
  * Audacious 3.0 port/rewrite for Fedora by Michael Schwendt
  * Ported for libxmp 4.0 by Claudio Matsuoka, 2013-04-13
@@ -21,8 +22,8 @@
 #include <cstring>
 #include <cctype>
 
-#if _AUD_PLUGIN_VERSION < 46
-#error "At least Audacious 3.6-alpha1 is required."
+#if _AUD_PLUGIN_VERSION < 48
+#error "At least Audacious 3.8 is required."
 #endif
 
 #include "config.h"
@@ -75,7 +76,7 @@ class AudXMP : public InputPlugin {
 
     bool init();
     bool is_our_file(const char *filename, VFSFile &file);
-    Tuple read_tuple(const char *filename, VFSFile &file);
+    bool read_tag(const char *filename, VFSFile &file, Tuple &t, Index<char> *image);
     bool play(const char *filename, VFSFile &file);
 };
 
@@ -279,10 +280,9 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
     return false;
 }
     
-Tuple AudXMP::read_tuple(const char *_filename, VFSFile &fd) {
+bool AudXMP::read_tag(const char *_filename, VFSFile &fd, Tuple &t, Index<char> *image) {
     char *filename = strdup(_filename);
     xmp_context ctx;
-    Tuple t;
     struct xmp_module_info mi;
     struct xmp_frame_info fi;
 
@@ -297,7 +297,7 @@ Tuple AudXMP::read_tuple(const char *_filename, VFSFile &fd) {
     if (xmp_load_module(ctx, filename) < 0) {
         free(filename);
         xmp_free_context(ctx);
-        return t;
+        return false;
     }
 
     xmp_get_module_info(ctx, &mi);
@@ -312,7 +312,7 @@ Tuple AudXMP::read_tuple(const char *_filename, VFSFile &fd) {
     xmp_release_module(ctx);
     xmp_free_context(ctx);
 
-    return t;
+    return true;
 }
 
 
