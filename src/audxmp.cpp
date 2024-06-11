@@ -35,6 +35,8 @@
 
 xmp_context ctx_play;
 
+static char const configSection[] = "XMP";
+
 typedef struct {
 	int mixing_freq;
 	bool force_mono;
@@ -80,7 +82,7 @@ class AudXMP : public InputPlugin {
     bool play(const char *filename, VFSFile &file);
 };
 
-EXPORT AudXMP aud_plugin_instance;
+LIBXMP_EXPORT AudXMP aud_plugin_instance;
 
 const char AudXMP::about[] =
     "Extended Module Player " XMP_VERSION "\n"
@@ -148,7 +150,7 @@ static void strip_vfs(char *s) {
 bool AudXMP::init(void) {
     _D("Plugin init");
 
-    aud_config_set_defaults("XMP",AudXMP::defaults);
+    aud_config_set_defaults(configSection,AudXMP::defaults);
     configure_load();
     
     return true;
@@ -320,11 +322,9 @@ bool AudXMP::read_tag(const char *_filename, VFSFile &fd, Tuple &t, Index<char> 
 #define FREQ_SAMPLE_22 1
 #define FREQ_SAMPLE_11 2
 
-static char const configSection[] = "XMP";
-
 static void configure_load() {
 
-#define CFGREADINT(x) plugin_cfg.x = aud_get_int ("XMP", #x)
+#define CFGREADINT(x) plugin_cfg.x = aud_get_int (configSection, #x)
 
     CFGREADINT(mixing_freq);
     CFGREADINT(convert8bit);
@@ -372,11 +372,11 @@ static const PreferencesWidget quality_widget_columns[] = {
 };
 
 static const PreferencesWidget options_widget_columns[] = {
-    WidgetCheck("Fix sample loops", WidgetBool(plugin_cfg.fixloops,&configure_apply)),
-    WidgetCheck("Force 3 octave range in standard MOD files", WidgetBool(plugin_cfg.modrange,&configure_apply)),
-    WidgetCheck("Enable 32-bit linear interpolation", WidgetBool(plugin_cfg.interpolation,&configure_apply)),
-    WidgetCheck("Enable IT filters", WidgetBool(plugin_cfg.filter,&configure_apply)),
-    WidgetSpin("Pan amplitude (%)",WidgetFloat(plugin_cfg.pan_amplitude,&configure_apply),{0.0,100.0,1.0,""}),
+    WidgetCheck("Fix sample loops", WidgetBool(configSection,"fixloops",&configure_apply)),
+    WidgetCheck("Force 3 octave range in standard MOD files", WidgetBool(configSection,"modrange",&configure_apply)),
+    WidgetCheck("Enable 32-bit linear interpolation", WidgetBool(configSection,"interpolation",&configure_apply)),
+    WidgetCheck("Enable IT filters", WidgetBool(configSection,"filter",&configure_apply)),
+    WidgetSpin("Pan amplitude (%)",WidgetFloat(configSection,"pan_amplitude",&configure_apply),{0.0,100.0,1.0,""}),
 };
 
 //static const NotebookTab notebook_tabs[] = {
