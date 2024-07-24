@@ -44,10 +44,8 @@ typedef struct {
 	bool filter;
 	bool convert8bit;
 	bool fixloops;
-	bool loop;
 	bool modrange;
 	double pan_amplitude;
-	int time;
 	struct xmp_module_info mod_info;
 } XMPConfig;
 
