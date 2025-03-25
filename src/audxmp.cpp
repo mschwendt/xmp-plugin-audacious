@@ -98,12 +98,14 @@ const char AudXMP::about[] =
 
 /* Filtering files by suffix isn't good for modules. */
 const char *const AudXMP::exts[] = {
-    "xm", "mod", "m15", "it", "s2m", "s3m", "stm", "stx", "med", "dmf",
-    "mtm", "ice", "imf", "ptm", "mdl", "ult", "liq", "psm", "amf",
-    "rtm", "pt3", "tcb", "dt", "gtk", "dtt", "mgt", "digi", "dbm",
-    "emod", "okt", "sfx", "far", "umx", "stim", "mtp", "ims", "669",
-    "fnk", "funk", "amd", "rad", "hsc", "alm", "kris", "ksm", "unic",
-    "zen", "crb", "tdd", "gmc", "gdm", "mdz", "xmz", "s3z", "j2b",
+    "it", "mod", "s3m", "xm",
+
+    "flt4", "nt", "st26", "st",
+
+    "669", "abk", "amf", "chp", "dbm", "digi", "dsym", "dtm", "emod", "far",
+    "flx", "fnk", "gdm", "hmn", "imf", "ims", "itz", "j2b", "liq", "masi",
+    "mdl", "med", "med3", "med4", "mfp", "mgt", "mmd0", "mmd1", "mtm", "musx",
+    "okt", "okta", "psm", "ptm", "rtm", "stm", "stx", "ult", "umx", "xmf",
     nullptr
 };
 
