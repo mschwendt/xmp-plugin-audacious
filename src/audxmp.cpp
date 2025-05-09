@@ -140,9 +140,9 @@ static void strip_vfs(char *s) {
             val[0] = *(c + 1);
             val[1] = *(c + 2);
             val[2] = 0;
-            *c++ = strtoul(val, NULL, 16);
+            *c = strtoul(val, NULL, 16);
             len = strlen(c);
-            memmove(c, c + 2, len - 1);
+            memmove(c+1, c + 3, len - 2);
         }
     }
 }
