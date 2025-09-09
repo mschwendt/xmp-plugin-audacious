@@ -253,7 +253,10 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
     
     xmp_start_player(ctx_play, freq, flags);
 
+    fi.loop_count = 0;
     while ( !check_stop() ) {
+        int old_loop = fi.loop_count;
+
         int jumpToTime = check_seek();
         if ( jumpToTime != -1 ) {
             xmp_seek_time(ctx_play, jumpToTime);
@@ -261,6 +264,9 @@ bool AudXMP::play(const char *_filename, VFSFile &fd) {
         
         xmp_get_frame_info(ctx_play, &fi);
         if (fi.time >= fi.total_time) {  // end reached?
+            break;
+        }
+        if (old_loop != fi.loop_count) {
             break;
         }
         write_audio(fi.buffer, fi.buffer_size);
